@@ -80,9 +80,6 @@ class App extends React.Component {
         <Router>
           <Header />
           <hr />
-          <Switch>
-              <Route exact path="/">
-              </Route>
 
           <div className="container shadow p-3 rounded-3">
             <div className="body-content">
@@ -100,7 +97,6 @@ class App extends React.Component {
               <hr />
             </div>
           </div>
-          </Switch>
           <hr />
           <Footer />
         </Router>
