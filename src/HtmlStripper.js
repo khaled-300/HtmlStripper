@@ -44,10 +44,13 @@ class HtmlStripper extends React.Component {
 
   componentDidMount() {
 
-    fetch(this.state.url, { header: { 'X-Requested-With': 'XMLHttpRequest' } })
+    fetch(this.state.url, { header: { 'X-Requested-With': 'XMLHttpRequest', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0' } })
       .then(
-
-        data => data.text(), data => console.log(data)
+        data => data.text(),
+        data => {
+          console.log(data);
+          this.setState({ repeatedWords: [], imagesUrls: [] })
+        }
       )
       .then(text => {
 
@@ -72,7 +75,7 @@ class HtmlStripper extends React.Component {
           for (var i = 0; i < imagesDoc.length; i++) {
 
             if (imagesDoc[i].src.includes('localhost')) {
-              srcList.push(baseUrl + '/' + imagesDoc[i].src.replace(window.location.protocol + '//' +window.location.host, ''));
+              srcList.push(baseUrl + '/' + imagesDoc[i].src.replace(window.location.protocol + '//' + window.location.host, ''));
             }
             else
               srcList.push(imagesDoc[i].src);
@@ -83,7 +86,10 @@ class HtmlStripper extends React.Component {
         console.log(repeated);
         console.log(srcList);
       })
-      .catch((error) => console.log(error.message));
+      .catch((error) => {
+        console.log(error.message)
+        this.setState({ repeatedWords: [], imagesUrls: [] })
+      });
   }
 
   render() {
@@ -91,19 +97,19 @@ class HtmlStripper extends React.Component {
     return (
       <div className="container">
 
-        <h4 style={{  width: '100%','word-break': 'break-word' }}>{this.props.url}</h4>
+        <h4 style={{ width: '100%', wordBreak: 'break-word' }}>{this.props.url}</h4>
         <hr />
         <p>Top 10 repeated words</p>
-        <ol style={{  width: '100%' }}>
+        <ol style={{ width: '100%' }}>
           {
-            this.state.repeatedWords.length ? this.state.repeatedWords.map((item) => <li>{item[1]}</li>) : <li>no items listed yet</li>
+            this.state.repeatedWords.length ? this.state.repeatedWords.map((item, index) => <li key={index}>{item[1]}</li>) : <li>no items listed yet</li>
           }
         </ol>
         <hr />
         <p>List of all images inported from the suplied URL</p>
-        <ol style={{ overflow: 'hidden', 'overflow-y': 'scroll', width: '100%', minHeight: '200px', maxHeight: '500px' }}>
+        <ol style={{ overflow: 'hidden', overflowY: 'scroll', width: '100%', minHeight: '200px', maxHeight: '500px' }}>
           {
-            this.state.imagesUrls.length ? this.state.imagesUrls.map((url) => <li><img src={url} style={{ width: '100%', textAlign: 'center', margin: 'auto' }}></img></li>) : <li>no images listed yet</li>
+            this.state.imagesUrls.length ? this.state.imagesUrls.map((url, index) => <li key={index}><img src={url} style={{ width: '100%', textAlign: 'center', margin: 'auto' }}></img></li>) : <li>no images listed yet</li>
           }
         </ol>
 
